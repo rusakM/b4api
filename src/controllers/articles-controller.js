@@ -11,12 +11,12 @@ exports.getArticles = async (req, res) => {
     res.status(200).json({
       status: "success",
       results: articles.length,
-      data: articles
+      data: articles,
     });
   } catch (err) {
     res.status(404).json({
       status: "fail",
-      message: err
+      message: err,
     });
   }
 };
@@ -27,13 +27,13 @@ exports.getArticle = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        article
-      }
+        article,
+      },
     });
   } catch (err) {
     res.status(404).json({
       status: "fail",
-      message: err
+      message: err,
     });
   }
 };
@@ -44,13 +44,13 @@ exports.addArticle = async (req, res) => {
     res.status(201).json({
       status: "success",
       data: {
-        article: newArt
-      }
+        article: newArt,
+      },
     });
   } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: err
+      message: err,
     });
   }
 };
@@ -58,19 +58,19 @@ exports.addArticle = async (req, res) => {
 exports.updateArticle = async (req, res) => {
   try {
     const article = await Article.findByIdAndUpdate(req.params.id, req.body, {
-      new: true
+      new: true,
     });
 
     res.status(203).json({
       message: "success",
       result: {
-        article
-      }
+        article,
+      },
     });
   } catch (err) {
     res.status(404).json({
       status: "fail",
-      message: err
+      message: err,
     });
   }
 };
@@ -80,16 +80,39 @@ exports.deleteArticle = async (req, res) => {
     await Article.findByIdAndRemove(req.params.id);
     res.status(204).json({
       status: "success",
-      data: null
+      data: null,
     });
   } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: err
+      message: err,
     });
   }
 };
 
 exports.options = (req, res) => {
   res.status(200).end();
+};
+
+exports.search = async (req, res) => {
+  try {
+    const { word } = req.params;
+    reg = new RegExp(word, "gi");
+    const arts = await Article.find({
+      $or: [{ title: reg }, { description: reg }, { tags: { $in: reg } }],
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: arts.length,
+      data: {
+        articles: arts,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
 };

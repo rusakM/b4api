@@ -16,5 +16,8 @@ module.exports = () => {
     .delete(articlesConstroller.deleteArticle)
     .options(articlesConstroller.options);
 
+  app.route("/search").get(articlesConstroller.search);
+  app.route("/search/:word").get(articlesConstroller.search);
+
   return app;
 };
