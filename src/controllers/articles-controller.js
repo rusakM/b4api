@@ -1,3 +1,4 @@
+const fs = require("fs");
 const Article = require("../models/article-model");
 const Fetures = require("../utils/api-features");
 
@@ -11,7 +12,9 @@ exports.getArticles = async (req, res) => {
     res.status(200).json({
       status: "success",
       results: articles.length,
-      data: articles,
+      data: {
+        articles,
+      },
     });
   } catch (err) {
     res.status(404).json({
@@ -111,6 +114,31 @@ exports.search = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+const readJson = () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(`${process.cwd()}/public/comparison.json`, (err, data) => {
+      if (err) reject(err);
+      resolve(JSON.parse(data));
+    });
+  });
+};
+
+exports.comparison = async (req, res) => {
+  try {
+    let data = await readJson();
+    console.log(data);
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    res.status(404).json({
       status: "fail",
       message: err,
     });

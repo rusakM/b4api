@@ -9,6 +9,8 @@ module.exports = () => {
     .get(articlesConstroller.getArticles)
     .post(articlesConstroller.addArticle);
 
+  app.route("/comparison").get(articlesConstroller.comparison);
+
   app
     .route("/:id")
     .get(articlesConstroller.getArticle)

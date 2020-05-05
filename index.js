@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const articlesRouter = require("./src/routers/articles-router");
 const categoriesRouter = require("./src/routers/categories-router");
+const uploadsRouter = require("./src/routers/uploads-router");
 dotenv.config({ path: "./config.env" });
 
 // env variables import
@@ -17,9 +18,9 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
-  .then(con => {
+  .then((con) => {
     console.log("con estabilished");
   });
 
@@ -32,7 +33,14 @@ app.use(cors());
 
 app.use("/api/articles", articlesRouter());
 app.use("/api/categories", categoriesRouter());
+app.use("/uploads/images", uploadsRouter());
 
+app.use((err, req, res, next) => {
+  res.status(404).json({
+    status: "fail",
+    message: err,
+  });
+});
 // 3 listening
 const server = http.createServer(app);
 
