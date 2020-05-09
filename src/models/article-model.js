@@ -32,7 +32,20 @@ const articleSchema = new mongoose.Schema(
 );
 
 articleSchema.virtual("photo").get(function () {
-  const photoId = Math.floor(Math.random() * 4) + 1;
+  //const photoId = Math.floor(Math.random() * 4) + 1;
+  let photoId = 1;
+  let lastChar = this.id[this.id.length - 1];
+  if (lastChar > 3 && lastChar <= 7) {
+    photoId = 2;
+  } else if (
+    (lastChar > 7 && lastChar <= 9) ||
+    lastChar === "a" ||
+    lastChar === "b"
+  ) {
+    photoId = 3;
+  } else {
+    photoId = 4;
+  }
   return `http://${process.env.ORIGIN}:${process.env.PORT}/uploads/images/${photoId}`;
 });
 
