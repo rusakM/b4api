@@ -8,7 +8,7 @@ exports.getArticles = async (req, res) => {
       .filter()
       .sort()
       .limitFields();
-    const articles = await features.query;
+    let articles = await features.query;
     res.status(200).json({
       status: "success",
       results: articles.length,
